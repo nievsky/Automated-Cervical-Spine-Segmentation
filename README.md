@@ -1,6 +1,9 @@
 # Automated Cervical Spine Segmentation in 2D Radiographs
 ---
 
+> **_NOTE:_** You can train the model going through the following steps or simply use the pre-trained weights provided in `models/best.pt` to evaluate the model on the test set or use it for inference on new images
+
+
 ### 0.1 System Requirements
 * **OS:** Windows / Linux / macOS
 * **Hardware:** NVIDIA GPU (optional, but recommended) with CUDA support.
