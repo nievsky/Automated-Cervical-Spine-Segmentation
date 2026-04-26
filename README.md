@@ -1,12 +1,33 @@
 # Automated Cervical Spine Segmentation in 2D Radiographs
-**Subject:** Essentials of Machine Learning
-**Author:** [Your Name]
-**Date:** April 2026
+---
+
+### 0.1 System Requirements
+* **OS:** Windows / Linux / macOS
+* **Hardware:** NVIDIA GPU (optional, but recommended) with CUDA support.
+* **Software:** Python 3.10+, Conda (recommended).
+
+### 0.2 Environment Installation
+```bash
+# Create and activate environment
+conda create -n spine_env python=3.10 -y
+conda activate spine_env
+
+# Install CUDA-enabled PyTorch
+pip install torch torchvision torchaudio --index-url [https://download.pytorch.org/whl/cu121](https://download.pytorch.org/whl/cu121)
+
+# Install Project Dependencies
+pip install ultralytics opencv-python split-folders
+```
+
+### 0.3 Dataset
+Install the dataset and unzip it [Cervical Spine X-ray Atlas (CSXA) V3.0](https://www.scidb.cn/en/detail?dataSetId=8e3b3d5e60a348ba961e19d48b881c90)
 
 ---
 
 ## 1. Project Overview
 This project addresses the challenge of automated anatomical identification in medical imaging. Specifically, we developed an **Instance Segmentation** pipeline for cervical vertebrae (C3-C7) using the Cervical Spine X-ray Atlas (CSXA). The goal was to move beyond simple object detection (bounding boxes) to provide precise anatomical outlines (polygons).
+
+![alt text](image.png)
 
 ## 2. Methodology Selection: YOLOv11-seg vs. TotalSegmentator
 Initial research suggested *TotalSegmentator*; however, it was rejected for this project due to:
@@ -41,8 +62,22 @@ We utilized **Transfer Learning** from the `yolo11s-seg` pre-trained weights. Th
 * **Early Stopping:** We set a `patience` of 20 epochs. This ensures that the training stops as soon as the model begins to **Overfit** (memorizing training data instead of learning general patterns).
 
 ### 4.2 Training Metrics Visualization
-> **[INSERT results.png HERE]**
-> ![Training Results Placeholder](path/to/results.png)
+![alt text](results.png)
+![alt text](confusion_matrix.png)
+| epoch | metrics/precision(B) | metrics/recall(B) | metrics/mAP50(B) | metrics/mAP50-95(B) |
+|------:|---------------------:|------------------:|-----------------:|--------------------:|
+| 1     | 0.92416              | 0.94869           | 0.98092          | 0.82272             |
+| 2     | 0.97719              | 0.9783            | 0.98808          | 0.83676             |
+| ...   | ...                  | ...               | ...              | ...                 |
+| 93    | 0.99697              | 0.99657           | 0.99428          | 0.87874             |
+| 94    | 0.99703              | 0.99697           | 0.99425          | 0.87477             |
+| 95    | 0.99696              | 0.99731           | 0.99434          | 0.8801              |
+| 96    | 0.99683              | 0.99732           | 0.99431          | 0.87716             |
+| 97    | 0.9969               | 0.99715           | 0.99431          | 0.87976             |
+| 98    | 0.99694              | 0.99727           | 0.99433          | 0.87929             |
+| 99    | 0.99708              | 0.99707           | 0.99428          | 0.88138             |
+| 100   | 0.99684              | 0.99727           | 0.99428          | 0.87986             |
+
 
 ---
 
@@ -59,10 +94,15 @@ We evaluated the model using the following mathematical foundations:
 ---
 
 ## 6. Qualitative Error Analysis (Failure Mode Discovery)
-Despite achieving a **mAP50 of 0.994**, qualitative analysis of the test set revealed specific failure modes. Analyzing these "mistakes" provides insight into the model's logic:
+Despite achieving a **mAP50 of 0.996**, qualitative analysis of the test set revealed specific failure modes. Analyzing these "mistakes" provides insight into the model's logic:
 
 ### 6.1 Failure Mode: Ordinal Assignment Errors
-In images such as `error_0661149.jpg` and `error_1752053.jpg`, the model correctly identified 5 vertebral bodies but mislabeled their sequence (e.g., predicting two C3s).
+<img src="error_0661149.png" alt="im1" width="300"/>
+<img src="error_1752053.png" alt="im1" width="300"/>
+<img src="error_2904134.png" alt="im1" width="300"/>
+
+
+In those images the model correctly identified 5 vertebral bodies but mislabeled their sequence (e.g., predicting two C3s).
 * **Cause:** Morphological similarity. C3-C6 look nearly identical to a pixel-based model.
 * **Interpretation:** The model is an excellent "Feature Detector" but lacks "Anatomical Sequence Awareness."
 
@@ -77,35 +117,13 @@ The project successfully demonstrated that a correctly engineered 2D segmentatio
 
 ---
 
+## 8. Additional resources
+Metrics & Math: [Dive into Deep Learning (CV Chapter)](https://d2l.ai/chapter_computer-vision/index.html)
 
+Architecture: [Ultralytics YOLOv11 Docs](https://docs.ultralytics.com/)
 
+Medical AI: [DeepLearning.AI - AI in Healthcare](https://pmc.ncbi.nlm.nih.gov/articles/PMC9955430/pdf/diagnostics-13-00688.pdf)
 
+Foundations: CS231n: [Convolutional Neural Networks for Visual Recognition](https://cs231n.stanford.edu/)
 
-
-
-
-
-
-
-
-
-
-## UPD. Minimal Git Add Checklist
-Use this quick checklist before each commit to avoid staging datasets and large artifacts.
-
-1. Check what changed:
-   ```bash
-   git status
-   ```
-2. Preview exactly what will be staged:
-   ```bash
-   git add -n README.md data.yaml scripts/
-   ```
-3. Stage only essential project files:
-   ```bash
-   git add README.md data.yaml scripts/ .gitignore
-   ```
-4. Verify staged content:
-   ```bash
-   git diff --staged
-   ```
+U-net: [Fully Automated Segmentation of Cervical Spinal](https://www.mdpi.com/2077-0383/14/19/6994)
