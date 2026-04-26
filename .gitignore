@@ -33,3 +33,7 @@ error_analysis_results/
 *.log
 *.tmp
 *.temp
+
+
+# include only best model (since it's only 20mbs)
+!models/best.pt
