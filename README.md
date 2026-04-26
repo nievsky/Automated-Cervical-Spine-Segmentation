@@ -27,7 +27,7 @@ Install the dataset and unzip it [Cervical Spine X-ray Atlas (CSXA) V3.0](https:
 ## 1. Project Overview
 This project addresses the challenge of automated anatomical identification in medical imaging. Specifically, we developed an **Instance Segmentation** pipeline for cervical vertebrae (C3-C7) using the Cervical Spine X-ray Atlas (CSXA). The goal was to move beyond simple object detection (bounding boxes) to provide precise anatomical outlines (polygons).
 
-![alt text](image.png)
+![alt text](imgs/image.png)
 
 ## 2. Methodology Selection: YOLOv11-seg vs. TotalSegmentator
 Initial research suggested *TotalSegmentator*; however, it was rejected for this project due to:
@@ -62,8 +62,8 @@ We utilized **Transfer Learning** from the `yolo11s-seg` pre-trained weights. Th
 * **Early Stopping:** We set a `patience` of 20 epochs. This ensures that the training stops as soon as the model begins to **Overfit** (memorizing training data instead of learning general patterns).
 
 ### 4.2 Training Metrics Visualization
-![alt text](results.png)
-![alt text](confusion_matrix.png)
+![alt text](imgs/results.png)
+![alt text](imgs/confusion_matrix.png)
 | epoch | metrics/precision(B) | metrics/recall(B) | metrics/mAP50(B) | metrics/mAP50-95(B) |
 |------:|---------------------:|------------------:|-----------------:|--------------------:|
 | 1     | 0.92416              | 0.94869           | 0.98092          | 0.82272             |
@@ -77,7 +77,6 @@ We utilized **Transfer Learning** from the `yolo11s-seg` pre-trained weights. Th
 | 98    | 0.99694              | 0.99727           | 0.99433          | 0.87929             |
 | 99    | 0.99708              | 0.99707           | 0.99428          | 0.88138             |
 | 100   | 0.99684              | 0.99727           | 0.99428          | 0.87986             |
-
 
 ---
 
@@ -97,9 +96,9 @@ We evaluated the model using the following mathematical foundations:
 Despite achieving a **mAP50 of 0.996**, qualitative analysis of the test set revealed specific failure modes. Analyzing these "mistakes" provides insight into the model's logic:
 
 ### 6.1 Failure Mode: Ordinal Assignment Errors
-<img src="error_0661149.png" alt="im1" width="300"/>
-<img src="error_1752053.png" alt="im1" width="300"/>
-<img src="error_2904134.png" alt="im1" width="300"/>
+<img src="imgs/error_0661149.png" alt="im1" width="300"/>
+<img src="imgs/error_1752053.png" alt="im1" width="300"/>
+<img src="imgs/error_2904134.png" alt="im1" width="300"/>
 
 
 In those images the model correctly identified 5 vertebral bodies but mislabeled their sequence (e.g., predicting two C3s).
